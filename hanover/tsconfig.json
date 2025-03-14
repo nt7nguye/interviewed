@@ -1,0 +1,14 @@
+{
+  "files": [],
+  "references": [
+    { "path": "./tsconfig.app.json" },
+    { "path": "./tsconfig.node.json" }
+  ],
+  "compilerOptions": {
+    "resolveJsonModule": true,
+    "paths": {
+      "https": ["./node_modules/https-browserify"],
+      "querystring": ["./node_modules/querystring-es3"]
+    }
+  },
+}

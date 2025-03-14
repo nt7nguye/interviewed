@@ -1,0 +1,53 @@
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    color: #fff;
+    background-color: #1a1a1a;
+}
+
+.searchHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.editQuery {
+    background-color: #333;
+    color: #fff;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.resultsSection {
+    margin-top: 20px;
+}
+
+.resultCard {
+    margin-bottom: 24px;
+    padding: 16px;
+    border-radius: 8px;
+    background-color: #242424;
+}
+
+.resultTitle {
+    color: #4a9eff;
+    text-decoration: none;
+    font-size: 1.2rem;
+    margin-bottom: 8px;
+    display: block;
+}
+
+.resultUrl {
+    color: #666;
+    font-size: 0.9rem;
+}
+
+.resultDescription {
+    color: #ccc;
+    margin-top: 8px;
+    line-height: 1.4;
+}
