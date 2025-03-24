@@ -1,0 +1,15 @@
+version: "3.8"
+
+services:
+  web:
+    build: .
+    ports:
+      - "3282:5000"
+    env_file:
+      - .env
+    volumes:
+      - .:/app
+    command: poetry run flask run --host=0.0.0.0 --port=5000 --debug
+    environment:
+      FLASK_APP: app.py
+      FLASK_ENV: development

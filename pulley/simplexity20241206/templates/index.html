@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Perplexity Clone</title>
+  </head>
+  <body>
+    <h1>Ask a Question</h1>
+    <form method="post">
+      <input
+        type="text"
+        name="question"
+        placeholder="Enter your question"
+        required
+      />
+      <input type="submit" value="Ask" />
+    </form>
+    {% if answer %} {% if "Sorry, an error occurred" in answer %}
+    <h2 style="color: red">Error:</h2>
+    {% else %}
+    <h2>Answer:</h2>
+    {% endif %}
+    <p>{{ answer|safe }}</p>
+    {% endif %}
+  </body>
+</html>

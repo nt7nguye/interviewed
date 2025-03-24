@@ -1,0 +1,17 @@
+# Virtual environment
+.venv/
+
+# Python cache
+__pycache__/
+*.pyc
+.pytest_cache/
+.benchmarks/
+
+# Environment variables
+.env
+
+# Other
+.DS_Store 
+
+# Logs
+app.log
