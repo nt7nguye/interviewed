@@ -88,11 +88,7 @@ def summarize_text(text: str):
 @complex(model="gpt-4o", tools=[search_web, view_url])
 def answer_question(message_history: list[Message] = []):
     # TODO: maybe refactor this out
-    return [
-        system(
-            "You are a helpful assistant that answers questions using web search results and can view specific URLs to provide detailed and cited answers. When you need information, use the search_web or view_url tools as appropriate before responding. Utilize high quality sources of information. Today is November 12, 2024. Include citations in the final answer."
-        ),
-    ] + message_history
+    return message_history
 
 
 # Run the assistant conversation
@@ -148,16 +144,44 @@ def index():
         answer = session.pop("answer", None)
 
 
+@app.route("/conversation", methods=["GET"])
+def conversation():
+    conversation_id = request.args.get("conversation_id")
+    return [
+        {"id": message["id"], "role": message["role"], "text": message["text"]}
+        for message in CONVERSATION[conversation_id]["messages"]
+        if message["role"] != "system"
+    ]
+
+
 @app.route("/new_conversation", methods=["POST"])
 def new_conversation():
     conversation_id = str(uuid.uuid4())
     question = request.json["question"]
+
+    assistant_response = run_assistant_conversation(question)
     CONVERSATION[conversation_id] = {
         "messages": [
-            user("User Question: " + question),
-            system(
-                "You are a helpful assistant that answers questions using web search results and can view specific URLs to provide detailed and cited answers. When you need information, use the search_web or view_url tools as appropriate before responding. Utilize high quality sources of information. Today is November 12, 2024. Include citations in the final answer."
-            ),
+            {
+                "id": str(uuid.uuid4()),
+                "role": "system",
+                "message": system(
+                    "You are a helpful assistant that answers questions using web search results and can view specific URLs to provide detailed and cited answers. When you need information, use the search_web or view_url tools as appropriate before responding. Utilize high quality sources of information. Today is November 12, 2024. Include citations in the final answer."
+                ),
+            },
+            {
+                "id": str(uuid.uuid4()),
+                "role": "user",
+                "message": user("User Question: " + question),
+                "text": question,
+            },
+            {
+                "id": str(uuid.uuid4()),
+                "role": "assistant",
+                # not sure if this is needed
+                "message": assistant("Assistant Response: " + assistant_response),
+                "text": assistant_response,
+            },
         ],
         "summary": "",
     }

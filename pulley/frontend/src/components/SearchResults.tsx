@@ -12,15 +12,21 @@ interface SearchResult {
 	thumbnail?: string;
 }
 
+interface Message {
+	id: string;
+	role: string;
+	text: string;
+}
+
 export default function SearchResults() {
-	const { query } = useParams();
-	const [results, setResults] = useState<SearchResult[]>([]);
+	const { conversation_id } = useParams();
+	const [messages, setMessages] = useState<Message[]>([]);
 
 	useEffect(() => {
-		if (!query) return;
+		if (!conversation_id) return;
 		const fetchResults = async () => {
 			const response = await fetch(
-				`http://localhost:3000/api/search?q=${query}`,
+				`http://localhost:3000/conversation?conversation_id=${conversation_id}`,
 				{
 					headers: {
 						"Content-Type": "application/json",
@@ -28,41 +34,23 @@ export default function SearchResults() {
 				}
 			);
 			const data = await response.json();
-			setResults(data);
+			setMessages(data);
 		};
 
 		fetchResults();
-	}, [query]);
+	}, [conversation_id]);
 
 	return (
 		<div className={styles.container}>
-			<div className={styles.searchHeader}>
-				<h1>{query}</h1>
-				<button className={styles.editQuery}>Edit Query</button>
-			</div>
-
-			<div className={styles.resultsSection}>
-				<h2>Sources</h2>
-				{results.map((result) => (
-					<div key={result.position} className={styles.resultCard}>
-						<div className={styles.resultHeader}>
-							{result.favicon && (
-								<img src={result.favicon} alt="" className={styles.favicon} />
-							)}
-							<h3>
-								<a href={result.link} className={styles.resultTitle}>
-									{result.title}
-								</a>
-							</h3>
-						</div>
-						<span className={styles.resultUrl}>{result.displayed_link}</span>
-						<p className={styles.resultDescription}>{result.snippet}</p>
-						{result.thumbnail && (
-							<img src={result.thumbnail} alt="" className={styles.thumbnail} />
-						)}
-					</div>
-				))}
-			</div>
+			{messages.map((message) => (
+				<div key={message.id}>
+					{message.role === "user" ? (
+						<h1>{message.text}</h1>
+					) : (
+						<p>{message.text}</p>
+					)}
+				</div>
+			))}
 		</div>
 	);
 }
