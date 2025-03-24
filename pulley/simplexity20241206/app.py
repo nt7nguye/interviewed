@@ -1,16 +1,23 @@
-from flask import Flask, render_template, request, redirect, url_for, session
+from re import A
+import uuid
+from flask import Flask, render_template, request, redirect, url_for, session, jsonify
 import os
 import requests
 import ell
 from ell import assistant, tool, Message, user, system, complex, simple
 from dotenv import load_dotenv
 from bs4 import BeautifulSoup
+from flask_cors import CORS
 
 # Load environment variables
 load_dotenv()
 
 # Initialize Ell
 ell.init()
+
+# Mock database of conversations
+# id: { "messages": [], "summary": ""}
+CONVERSATION = {}
 
 
 # Define the search tool
@@ -80,6 +87,7 @@ def summarize_text(text: str):
 # Define the assistant with tool usage
 @complex(model="gpt-4o", tools=[search_web, view_url])
 def answer_question(message_history: list[Message] = []):
+    # TODO: maybe refactor this out
     return [
         system(
             "You are a helpful assistant that answers questions using web search results and can view specific URLs to provide detailed and cited answers. When you need information, use the search_web or view_url tools as appropriate before responding. Utilize high quality sources of information. Today is November 12, 2024. Include citations in the final answer."
@@ -116,6 +124,7 @@ def run_assistant_conversation(question: str) -> str:
 # Set up Flask app
 app = Flask(__name__)
 app.secret_key = "your-secure-secret-key"  # Replace with a secure, random key
+CORS(app)
 
 
 # Flask routes
@@ -137,6 +146,24 @@ def index():
     else:
         # GET request
         answer = session.pop("answer", None)
+
+
+@app.route("/new_conversation", methods=["POST"])
+def new_conversation():
+    conversation_id = str(uuid.uuid4())
+    question = request.json["question"]
+    CONVERSATION[conversation_id] = {
+        "messages": [
+            user("User Question: " + question),
+            system(
+                "You are a helpful assistant that answers questions using web search results and can view specific URLs to provide detailed and cited answers. When you need information, use the search_web or view_url tools as appropriate before responding. Utilize high quality sources of information. Today is November 12, 2024. Include citations in the final answer."
+            ),
+        ],
+        "summary": "",
+    }
+
+    return jsonify({"conversation_id": conversation_id})
+
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=3000, debug=True)

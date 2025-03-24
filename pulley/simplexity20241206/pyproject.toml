@@ -13,6 +13,8 @@ python-dotenv = "^1.0.0"
 ell-ai = {extras = ["all"], version = "^0.0.14"}
 beautifulsoup4 = "^4.12.3"
 anthropic = "0.34.2"
+uuid = "^1.30"
+flask-cors = "^5.0.1"
 
 [tool.poetry.group.dev.dependencies]
 black = "^24.10.0"
