@@ -72,8 +72,6 @@ def get_shifts(
     "user_id": 5,
     "sort_preference": "pay" / "starts_soonest" / "starts_latest"
 """
-
-
 def get_user_preferences(user_id: int):
     url = f"https://ww-backend-project.replit.app/backend/user_preferences/{user_id}"
 

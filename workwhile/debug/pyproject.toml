@@ -1,0 +1,12 @@
+[project]
+name = "ww-project-and-debugging-interview"
+version = "0.1.0"
+description = "Home of the WorkWhile backend project and debugging interview!"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "aiosqlite>=0.20.0",
+    "fastapi>=0.115.0",
+    "rich>=13.9.2",
+    "uvicorn>=0.31.0",
+]
