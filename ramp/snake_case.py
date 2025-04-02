@@ -20,45 +20,40 @@ def _dont_convert_this():
 def convert_this():
     number_two="sth"
     _=number_two
+    __=more
     print(number_two)
 """
 
-def is_valid_char(char, start):
-    if char == "_":
-        return True
-    if not start:
-        return char.isalnum()
-    return char.isalpha()
 
 def convert(code):
     # tokenize the input by space/newline
     new_code = ""
-    start = True
-    n = len(code)
-    i = 0
-    seen_alphanum = False
-    should_capitalize = False
-    while i < n:
-        char = code[i]
-        if is_valid_char(char, start):
-            if char == "_":
-                if seen_alphanum:
-                    should_capitalize=True
-                new_code += char
+    met_alnum_in_identifier=False
+    should_capitalize=True
+    running_underscore_count = 0
+    for char in code:
+        if char == "_":
+            if met_alnum_in_identifier:
+                should_capitalize=True
             else:
-                if should_capitalize:
-                    new_code = new_code[:-1] + char.capitalize()
-                    should_capitalize=False
-                else:
-                    new_code += char
-                seen_alphanum=True
-            start=False
-        else:
-            start=True
+            # Prefix
+                new_code += char
+            running_underscore_count += 1
+        elif char.isalnum():
+            running_underscore_count = 0
+            met_alnum_in_identifier=True
+            new_code += char.upper() if should_capitalize else char
             should_capitalize=False
-            seen_alphanum=False
+        else:
+            # Suffix
+            if should_capitalize:
+                new_code += '_' * running_underscore_count
+
+            met_alnum_in_identifier=False
+            should_capitalize=False
+            running_underscore_count = 0
             new_code += char
-        i += 1
+
     return new_code
 
 print(convert(test_input))
