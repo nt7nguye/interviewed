@@ -1,0 +1,23 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Run API",
+			"type": "shell",
+			"command": "cd api && poetry run -- fastapi dev main.py",
+			"problemMatcher": [],
+			"options": {
+				"cwd": "${workspaceFolder}/"
+			}
+		},
+		{
+			"label": "Run TigerBeetle",
+			"type": "shell",
+			"command": "make start-tigerbeetle",
+			"problemMatcher": [],
+			"options": {
+				"cwd": "${workspaceFolder}/api"
+			}
+		}
+	]
+}
